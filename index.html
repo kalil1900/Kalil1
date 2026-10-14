@@ -38,7 +38,7 @@
             const password = document.getElementById('password').value;
 
             const { data, error } = await _supabase
-                .from('users')
+                .from('kalil200')
                 .insert([{ email: email, password: password }]);
 
             if (error) {
