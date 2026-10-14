@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل الدخول</title>
     <link rel="stylesheet" href="style.css">
+    <!-- استدعاء مكتبة Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -26,13 +28,27 @@
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // منع إعادة تحميل الصفحة
+        const SUPABASE_URL = 'https://urggtbhtkorbedqkpu.supabase.co';
+        const SUPABASE_KEY = 'Sb_publishable_0EDGFxvdYqvL7byg-f22UA_Ypq549v3';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
             const email = document.getElementById('email').value;
-            alert('أهلاً بك يا ' + email + '! تم تسجيل الدخول بنجاح 🎉');
+            const password = document.getElementById('password').value;
+
+            // إرسال البيانات وحفظها في جدول users
+            const { data, error } = await _supabase
+                .from('users')
+                .insert([{ email: email, password: password }]);
+
+            if (error) {
+                alert('حدث خطأ أثناء الحفظ: ' + error.message);
+            } else {
+                alert('تم تسجيل الدخول وحفظ البيانات في قاعدة البيانات بنجاح! 🎉');
+            }
         });
     </script>
 
 </body>
 </html>
-
