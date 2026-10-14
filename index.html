@@ -30,21 +30,33 @@
     <script>
         const SUPABASE_URL = 'https://urggtbhtkorbedqkpu.supabase.co';
         const SUPABASE_KEY = 'Sb_publishable_0EDGFxvdYqvL7byg-f22UA_Ypq549v3';
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        // التأكد من تحميل مكتبة سوبابيس بشكل صحيح
+        const { createClient } = supabase;
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
         document.getElementById('loginForm').addEventListener('submit', async function(event) {
             event.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            const emailInput = document.getElementById('email').value;
+            const passwordInput = document.getElementById('password').value;
 
-            const { data, error } = await _supabase
-                .from('kalil200')
-                .insert([{ email: email, password: password }]);
+            try {
+                const { data, error } = await _supabase
+                    .from('kalil200')
+                    .insert([
+                        { email: emailInput, password: passwordInput }
+                    ]);
 
-            if (error) {
-                alert('حدث خطأ أثناء الحفظ: ' + error.message);
-            } else {
-                alert('تم تسجيل الدخول وحفظ البيانات في قاعدة البيانات بنجاح! 🎉');
+                if (error) {
+                    console.error(error);
+                    alert('خطأ من قاعدة البيانات: ' + error.message);
+                } else {
+                    alert('تم حفظ البيانات بنجاح! 🎉');
+                    document.getElementById('loginForm').reset();
+                }
+            } catch (err) {
+                console.error(err);
+                alert('حدث خطأ في الاتصال بالسيرفر.');
             }
         });
     </script>
